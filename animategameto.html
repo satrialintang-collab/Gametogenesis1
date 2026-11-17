@@ -1,0 +1,145 @@
+<!DOCTYPE html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Gametogenesis pada Hewan</title>
+<style>
+:root{--bg:#030612;--fg:#e8f1ff;--ac:#4fc3f7;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#030612;--fg:#e8f1ff}}
+:root[data-theme="dark"]{--bg:#030612;--fg:#e8f1ff}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:system-ui,sans-serif}
+#w{max-width:1100px;margin:0 auto}
+canvas{width:100%;display:block;aspect-ratio:16/9;background:#000;cursor:pointer}
+#bar{display:flex;gap:10px;align-items:center;padding:10px;flex-wrap:wrap}
+#bar input[type=range]{flex:1;min-width:140px}
+button{background:var(--ac);color:#021;border:0;border-radius:8px;padding:8px 14px;font-weight:700}
+p{padding:0 12px;font-size:13px;opacity:.7}
+#w:fullscreen,#w:-webkit-full-screen,#w.fs{max-width:none;background:#000;display:flex;flex-direction:column;justify-content:center;align-items:center}
+#w:fullscreen{height:100%}
+#w.fs{position:fixed;inset:0;z-index:99;height:100dvh}
+#w:fullscreen canvas,#w:-webkit-full-screen canvas,#w.fs canvas{width:min(100vw,calc((100vh - 64px)*16/9))}
+#w:fullscreen #bar,#w:-webkit-full-screen #bar,#w.fs #bar{width:100%;box-sizing:border-box}
+#w:fullscreen p,#w:-webkit-full-screen p,#w.fs p{display:none}
+</style></head><body><div id="w"><canvas id="c" width="1280" height="720"></canvas>
+<div id="bar"><button id="pb">▶ Putar</button><input type="range" id="sl" min="0" max="950" value="0"><span id="tm">0:00 / 1:35</span><label><input type="checkbox" id="nr" checked> Suara narasi</label><button id="fs">⛶ Layar penuh</button></div>
+<p>Ringkasan Ilustrasi Materi Gametogenesis Pada Hewan. Kelompok 5 Biolgi XI-F. (Dibuat oleh Anthropic AI)</p></div>
+<script>
+const C=document.getElementById('c'),g=C.getContext('2d'),TAU=Math.PI*2;
+const cl=(v,a=0,b=1)=>Math.min(b,Math.max(a,v)),P=(t,a,b)=>cl((t-a)/(b-a)),E=x=>x<.5?2*x*x:1-Math.pow(-2*x+2,2)/2,L=(a,b,k)=>a+(b-a)*k;
+const BL='#4fc3f7',PK='#ff8fb1',YL='#ffd54f',GR='#7ee787';
+function ell(x,y,rx,ry,f,s,a=1,lw=2){g.save();g.globalAlpha*=a;g.beginPath();g.ellipse(x,y,Math.max(.1,rx),Math.max(.1,ry),0,0,TAU);if(f){g.fillStyle=f;g.fill()}if(s){g.strokeStyle=s;g.lineWidth=lw;g.stroke()}g.restore()}
+function T(s,x,y,sz,c='#fff',a=1,al='center'){if(a<=0)return;g.save();g.globalAlpha*=a;g.fillStyle=c;g.font=`700 ${sz}px system-ui,sans-serif`;g.textAlign=al;g.textBaseline='middle';g.fillText(s,x,y);g.restore()}
+function chr(x,y,s,col,rot,a=1){g.save();g.translate(x,y);g.rotate(rot);g.globalAlpha*=a;g.strokeStyle=col;g.lineWidth=7*s;g.lineCap='round';g.beginPath();g.moveTo(-9*s,-16*s);g.lineTo(9*s,16*s);g.moveTo(9*s,-16*s);g.lineTo(-9*s,16*s);g.stroke();g.restore()}
+function cell(x,y,r,col,a=1){r=Math.max(.5,r);const gr=g.createRadialGradient(x-r*.3,y-r*.3,r*.1,x,y,r);gr.addColorStop(0,col+'ff');gr.addColorStop(1,col+'66');g.save();g.globalAlpha*=a;g.shadowColor=col;g.shadowBlur=18;g.beginPath();g.arc(x,y,r,0,TAU);g.fillStyle=gr;g.fill();g.restore();ell(x,y,r,r,null,'#ffffff66',a,1.5)}
+function sperm(x,y,s,t,a=1,ang=0){g.save();g.translate(x,y);g.rotate(ang);g.scale(s,s);g.globalAlpha*=a;g.strokeStyle='#7fd8ff';g.lineWidth=3;g.lineCap='round';g.beginPath();g.moveTo(-12,0);for(let i=0;i<=60;i++)g.lineTo(-i*1.6-14,Math.sin(i*.35-t*8)*(3+i*.12));g.stroke();ell(-8,0,10,5,'#ffb454');ell(8,0,14,10,'#4fc3f7','#fff');ell(17,0,6,8,'#ffe082');g.restore()}
+
+const S=[
+{s:0,e:10,n:"Pernahkah kamu berpikir, bagaimana tubuh menghasilkan sel sperma dan sel telur? Prosesnya melibatkan pembelahan sel yang sangat teratur: gametogenesis!",f:t=>{
+ if(t<1.8)for(let k=0;k<2;k++){const q=(((t-k*.8)%.8)+.8)%.8/.8;ell(640,360,30+q*90,30+q*90,null,'#ff4d6d',.5*(1-q),3)}
+ const z=E(P(t,1.2,4));
+ if(t>1&&t<4.4){const r=L(30,430,z)*(1+.03*Math.sin(t*8)),a=P(t,1,1.6)*(1-P(t,3.6,4.4));cell(640,360,r,BL,a);for(let i=0;i<6;i++)chr(640+Math.cos(i*1.1+t*.8)*r*.42,360+Math.sin(i*1.7+t)*r*.36,L(.3,2.6,z),YL,t*1.5+i,a)}
+ T('TAHUKAH KAMU?',640,330,92,'#fff',P(t,3.6,4.2)*(1-P(t,5.8,6.3)));
+ if(t>5.8){const k=E(P(t,5.8,6.8));cell(960,330,95*k,PK);sperm(L(100,380,k),330+Math.sin(t*5)*14,2.2,t,k)}
+ T('Bagaimana tubuh menghasilkan sel reproduksi?',640,110,38,'#fff',P(t,6.3,7));T('GAMETOGENESIS!',640,545,70,YL,P(t,8,8.6))}},
+{s:10,e:20,n:"Gametogenesis adalah pembentukan dan pematangan gamet. Ada dua jenis: spermatogenesis penghasil sperma, dan oogenesis penghasil sel telur. Keduanya menghasilkan sel haploid untuk fertilisasi.",f:t=>{
+ T('GAMETOGENESIS',640,60,56,'#fff',P(t,0,.8));g.fillStyle='#ffffff22';g.fillRect(639,120,2,480);
+ const a=P(t,.8,1.8),b=P(t,4,5);
+ ell(320,330,170,120,'#274b7a','#7fb0ff',a,3);
+ for(let k=0;k<4;k++){const yy=330+(k-1.5)*52;g.save();g.globalAlpha=a*.6;g.strokeStyle='#9fc5ff';g.lineWidth=5;g.beginPath();for(let x=-130;x<=130;x+=6){const y=yy+Math.sin(x*.06+k+t)*12;x==-130?g.moveTo(320+x,y):g.lineTo(320+x,y)}g.stroke();g.restore();sperm(200+((t*45+k*70)%240),yy,.5,t+k,a)}
+ ell(960,330,170,120,'#6a2a4c','#ff9ec1',b,3);cell(960,330,60,'#ffc2d6',b*.7);cell(960,330,28,PK,b);
+ T('Testis',320,170,30,'#cfe3ff',a);T('1. Spermatogenesis',320,520,36,BL,P(t,1.8,2.6));
+ T('Ovarium',960,170,30,'#ffd6e4',b);T('2. Oogenesis',960,520,36,PK,P(t,5,5.8));
+ T('Gamet = sel haploid (n)',640,585,36,YL,P(t,7.5,8.3))}},
+{s:20,e:30,n:"Sel diploid memiliki dua set kromosom, sel haploid hanya satu set. Pada manusia, sel tubuh berisi 46 kromosom. Melalui meiosis, jumlahnya menjadi 23 pada gamet.",f:t=>{
+ const s=E(P(t,3.8,6)),x1=L(640,420,s),x2=L(640,860,s),r=L(230,150,s),cy=320,Cs=[YL,'#ff7ab6',GR];
+ T('DIPLOID (2n) = 46',640,60,48,'#fff',P(t,.4,1.2)*(1-P(t,6.3,6.8)));T('HAPLOID (n) = 23',640,60,48,YL,P(t,6.8,7.6));
+ cell(x2,cy,r,'#3d6fb3',.9);cell(x1,cy,r,BL,.9);
+ for(let i=0;i<3;i++){const ox=Math.cos(i*2.1+.5)*r*.45,oy=Math.sin(i*2.1+.5)*r*.45,w=r/110*(1+.1*Math.sin(t*3+i));chr(x1+ox,cy+oy,w,Cs[i],i);chr(x2+ox+(1-s)*40,cy+oy+(1-s)*30,w,Cs[i],-i)}
+ T('MEIOSIS',640,cy,40,'#fff',Math.sin(P(t,3.8,6)*Math.PI));
+ T(Math.round(L(46,23,P(t,4.3,7.2)))+' kromosom',640,545,64,YL,P(t,4,4.6));T('Ilustrasi disederhanakan: 6 kromosom mewakili 46',640,605,20,'#9fc5ff',.8)}},
+{s:30,e:48,n:"Spermatogenesis berlangsung di tubulus seminiferus pada testis. Spermatogonium berkembang menjadi spermatosit primer. Meiosis pertama menghasilkan dua spermatosit sekunder. Meiosis kedua menghasilkan empat spermatid, yang matang menjadi empat spermatozoa.",f:t=>{
+ const X=[130,370,620,880,1130],cy=330,al=(a,b)=>E(P(t,a,b)),k1=al(.5,1.5),k2=al(3.5,4.5),k3=al(6.5,7.5),k4=al(10,11),k5=al(13.5,15);
+ const lab=(c,n,p,a)=>{T(n,X[c],565,22,'#fff',a);T(p,X[c],598,22,YL,a)};
+ T('Tubulus seminiferus — Testis',640,50,36,'#cfe3ff',al(0,.8));
+ const n=t>13.5?4:t>10?3:t>6.5?2:t>.5?1:0;T(['1','2','4','4'].slice(0,n).join(' → '),60,110,46,YL,1,'left');
+ cell(X[0],cy,50,BL,k1*(1-.6*k2));lab(0,'Spermatogonium','2n = 46',k1);
+ if(k2>0){cell(L(X[0],X[1],k2),cy,L(50,64,k2),BL,1-.6*k3);lab(1,'Spermatosit primer','2n = 46',k2)}
+ if(k3>0){[240,420].forEach(y=>cell(L(X[1],X[2],k3),L(cy,y,k3),44,'#4dd0e1',1-.6*k4));lab(2,'2 Spermatosit sekunder','n = 23',k3);T('MEIOSIS I',495,200,28,'#fff',k3)}
+ if(k4>0){[180,300,360,480].forEach((y,j)=>cell(L(X[2],X[3],k4),L([240,240,420,420][j],y,k4),28,'#80deea',1-.6*k5));lab(3,'4 Spermatid','n = 23',k4);T('MEIOSIS II',750,120,28,'#fff',k4)}
+ if(k5>0){[180,300,360,480].forEach(y=>sperm(L(X[3]-10,X[4]+30,k5),y,.55,t+y,k5));lab(4,'4 Spermatozoa','n = 23',k5);T('PEMATANGAN',1005,120,28,'#fff',k5)}}},
+{s:48,e:57,n:"Sperma punya empat bagian. Kepala berisi inti pembawa kromosom. Akrosom berisi enzim penembus sel telur. Bagian tengah kaya mitokondria penghasil energi, dan ekor membantu bergerak.",f:t=>{
+ const y=340+Math.sin(t*2)*8;T('Struktur Sperma',640,60,44,'#fff',P(t,0,.6));sperm(825,y,4.2,t,1);
+ const L5=(tx,ty,lx,ly,col,n,d,at,dir)=>{const k=P(t,at,at+.8);T(n,tx,ty,34,col,k);T(d,tx,ty+32,22,'#fff',k);g.save();g.globalAlpha=k;g.strokeStyle=col;g.lineWidth=3;g.beginPath();g.moveTo(tx,dir>0?ty+58:ty-30);g.lineTo(lx,ly);g.stroke();g.restore()};
+ L5(900,175,858,y-45,'#4fc3f7','Kepala','Inti sel pembawa kromosom',1.2,1);
+ L5(1010,500,897,y+35,'#ffe082','Akrosom','Enzim penembus lapisan sel telur',3,-1);
+ L5(600,175,791,y-20,'#ffb454','Bagian tengah','Mitokondria penghasil energi',4.8,1);
+ L5(480,500,565,y+25,'#7fd8ff','Ekor','Membantu pergerakan sperma',6.6,-1)}},
+{s:57,e:74,n:"Oogenesis berlangsung di ovarium, dalam folikel. Oogonium berkembang menjadi oosit primer. Meiosis pertama menghasilkan oosit sekunder dan badan kutub. Pembelahan berikutnya menghasilkan ootid yang menjadi ovum. Karena sitoplasma terbagi tidak merata, hanya satu gamet fungsional terbentuk.",f:t=>{
+ const X=[130,370,620,880,1130],cy=300,al=(a,b)=>E(P(t,a,b)),k1=al(.5,1.5),k2=al(3,4),k3=al(6,7),k4=al(9.5,10.5),k5=al(12.5,14),PB='#c9a0b4';
+ const lab=(c,n,p,a)=>{T(n,X[c],565,22,'#fff',a);T(p,X[c],598,22,YL,a)};
+ T('Ovarium — Folikel',640,45,36,'#ffd6e4',al(0,.8));
+ const nm=['OOGONIUM','OOSIT PRIMER','OOSIT SEKUNDER','OOTID','OVUM'],n=t>12.5?5:t>9.5?4:t>6?3:t>3?2:t>.5?1:0;T(nm.slice(0,n).join(' → '),640,95,24,YL);
+ cell(X[0],cy,45,PK,k1*(1-.6*k2));lab(0,'Oogonium','2n = 46',k1);T('mitosis',X[0],cy-80,22,'#fff',k1*(1-k2));
+ if(k2>0){const x=L(X[0],X[1],k2);ell(x,cy,L(45,88,k2),L(45,88,k2),null,'#ffffff55',1-.6*k3,2);cell(x,cy,L(45,62,k2),PK,1-.6*k3);lab(1,'Oosit primer','2n = 46',k2);T('folikel',X[1],cy-105,22,'#ffd6e4',k2*(1-k3))}
+ if(k3>0){const x=L(X[1],X[2],k3);cell(x,cy,L(62,56,k3),PK,1-.6*k4);cell(x,L(cy,430,k3),14,PB,1-.6*k4);lab(2,'Oosit sekunder','n = 23',k3);T('MEIOSIS I',495,200,28,'#fff',k3);T('Sitoplasma terbagi tidak merata',640,145,28,YL,k3);T('Badan kutub',X[2]+28,432,20,'#fff',k3*(1-k4),'left')}
+ if(k4>0){const x=L(X[2],X[3],k4);cell(x,cy,L(56,52,k4),PK,1-.6*k5);cell(x,L(cy,385,k4),12,PB);cell(x,L(430,440,k4),9,PB);cell(x,L(430,478,k4),9,PB);lab(3,'Ootid','n = 23',k4);T('MEIOSIS II',750,215,28,'#fff',k4);T('Badan kutub',X[3]+24,440,20,'#fff',k4*(1-k5),'left')}
+ if(k5>0){const x=L(X[3],X[4],k5);ell(x,cy,L(52,92,k5),L(52,92,k5),null,'#ffffff66',1,4);cell(x,cy,L(52,80,k5),PK);lab(4,'Ovum','n = 23',k5);T('1 gamet fungsional',X[4],cy-120,24,YL,k5)}}},
+{s:74,e:85,n:"Ketika sperma bertemu ovum, terjadi fertilisasi. Masing-masing gamet membawa 23 kromosom. Saat bergabung, terbentuk zigot dengan 46 kromosom, bersifat diploid.",f:t=>{
+ const f=P(t,5.2,6.2),sx=L(120,705,E(P(t,.5,5))),pk=P(t,5.6,6.4);
+ T('FERTILISASI = PEMBENTUKAN ZIGOT',640,60,44,'#fff',P(t,.8,1.6));
+ ell(900,340,150,150,null,'#ffffff77',1,5);cell(900,340,128,t>5.8?'#b388ff':PK);
+ for(let i=0;i<3;i++){const a=i*2.1;chr(900+Math.cos(a)*55,340+Math.sin(a)*50,.9,YL,a);chr(900+Math.cos(a+1)*50,340+Math.sin(a+1)*45,.9,BL,-a,pk)}
+ sperm(sx,340+Math.sin(t*3)*16*(1-P(t,3,5)),1.8,t,1-P(t,5.2,6.2));
+ ell(900,340,170,170,'#ffffff',null,Math.sin(f*Math.PI)*.8);
+ T('Sperma n = 23',260,230,30,BL,P(t,1.5,2.3)*(1-P(t,5,5.6)));T('Ovum n = 23',900,140,30,PK,P(t,1.5,2.3)*(1-P(t,5.5,6)));
+ T('23 + 23 = 46',300,330,76,YL,P(t,6.3,7));T('n + n = 2n',300,420,60,'#fff',P(t,7,7.7));T('Zigot (2n = 46)',900,540,34,'#d1b3ff',P(t,7.5,8.3))}},
+{s:85,e:95,n:"Jadi, spermatogenesis menghasilkan empat sperma fungsional, sedangkan oogenesis menghasilkan satu ovum fungsional. Keduanya haploid, lalu bergabung membentuk zigot diploid.",f:t=>{
+ const A=1-P(t,7.2,7.8),v=A*P(t,.2,1);
+ [0,1,2,3].forEach(i=>sperm(280+i*150,210+Math.sin(t*4+i)*6,.8,t+i,v));cell(1050,210,85,PK,v);
+ T('4 spermatozoa',430,110,30,BL,v);T('1 ovum',1050,95,30,PK,v);
+ ['Gametogenesis = spermatogenesis + oogenesis','Keduanya melibatkan meiosis','Spermatogenesis → 4 sperma fungsional','Oogenesis → 1 ovum fungsional','Fertilisasi → zigot diploid'].forEach((s,i)=>T('✓ '+s,140,330+i*58,32,'#fff',A*P(t,.8+i,1.4+i),'left'));
+ const B=P(t,7.8,8.5);T('SEKARANG KAMU SUDAH TAHU!',640,290,68,YL,B);T('GAMETOGENESIS PADA HEWAN',640,380,44,'#fff',B);T('KELOMPOK 5 — BIOLOGI',640,445,34,'#9fc5ff',B);
+ g.fillStyle='#000';g.globalAlpha=P(t,9,10);g.fillRect(0,0,1280,720);g.globalAlpha=1}}
+];
+function sub(txt){g.fillStyle='rgba(0,0,0,.62)';g.fillRect(0,636,1280,84);g.font='600 29px system-ui,sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillStyle='#fff';
+ let ls=[txt];if(g.measureText(txt).width>1180){const w=txt.split(' ');let m=0,acc=0;for(;m<w.length;m++){acc+=w[m].length+1;if(acc>txt.length/2)break}ls=[w.slice(0,m+1).join(' '),w.slice(m+1).join(' ')]}
+ ls.forEach((l,i)=>g.fillText(l,640,ls.length>1?658+i*36:678))}
+let i=0,p=0,playing=false,last=0,lastB=-1,ac,done=false,sentIdx=0,t0=0,gen=0,wps=2.3;
+const pb=document.getElementById('pb'),sl=document.getElementById('sl'),tm=document.getElementById('tm'),nr=document.getElementById('nr'),fsb=document.getElementById('fs'),stage=document.getElementById('w');
+const dur=c=>c.e-c.s,nowT=()=>S[i].s+p*dur(S[i]),words=c=>c.n.split(/\s+/).length,sents=c=>c.n.match(/[^.?!]+[.?!:]?/g).map(x=>x.trim());
+const hasTTS=()=>nr.checked&&'speechSynthesis' in window;
+function thump(){try{ac=ac||new AudioContext();const o=ac.createOscillator(),v=ac.createGain();o.frequency.value=55;o.connect(v);v.connect(ac.destination);v.gain.setValueAtTime(.6,ac.currentTime);v.gain.exponentialRampToValueAtTime(.001,ac.currentTime+.25);o.start();o.stop(ac.currentTime+.3)}catch(e){}}
+function stopSpeech(){gen++;try{speechSynthesis.cancel()}catch(e){}}
+function startScene(){stopSpeech();done=false;sentIdx=0;t0=performance.now();if(!playing||!hasTTS())return;
+ const my=gen,c=S[i],ss=sents(c);
+ ss.forEach((s,k)=>{const u=new SpeechSynthesisUtterance(s);u.lang='id-ID';u.rate=1;u.onstart=()=>{if(my==gen)sentIdx=k};
+  if(k==ss.length-1){const fin=()=>{if(my!=gen)return;done=true;const el=(performance.now()-t0)/1000;if(el>2)wps=.5*wps+.5*cl(words(c)/el,1.5,4)};u.onend=fin;u.onerror=fin}
+  try{speechSynthesis.speak(u)}catch(e){done=true}})}
+function step(dt){const c=S[i],D=dur(c),est=words(c)/wps;
+ if(!hasTTS())p+=dt/D;
+ else if(done||performance.now()-t0>(est*1.8+5)*1000)p+=dt/.7;
+ else p=Math.min(p+dt/est,.985);
+ if(p>=1){if(i<S.length-1){i++;p=0;lastB=-1;startScene()}else{p=1;setP(false)}}}
+function setP(v){playing=v;pb.textContent=v?'⏸ Jeda':'▶ Putar';if(!v)stopSpeech()}
+function toggle(){if(playing){setP(false);return}if(i==S.length-1&&p>=1){i=0}p=0;lastB=-1;setP(true);startScene()}
+pb.onclick=toggle;C.onclick=toggle;
+sl.oninput=()=>{const v=sl.value/10;let k=S.findIndex(c=>v<c.e);if(k<0)k=S.length-1;i=k;p=0;lastB=-1;if(playing)startScene();else stopSpeech()};
+nr.onchange=()=>{p=0;if(playing)startScene();else stopSpeech()};
+fsb.onclick=()=>{const fe=document.fullscreenElement||document.webkitFullscreenElement;
+ if(fe||stage.classList.contains('fs')){const x=document.exitFullscreen||document.webkitExitFullscreen;if(fe&&x)x.call(document);stage.classList.remove('fs');return}
+ const r=stage.requestFullscreen||stage.webkitRequestFullscreen;
+ if(r){try{const q=r.call(stage);if(q&&q.catch)q.catch(()=>stage.classList.add('fs'))}catch(e){stage.classList.add('fs')}}else stage.classList.add('fs')};
+function render(){
+ const c=S[i],t=p*dur(c);
+ g.globalAlpha=1;const gr=g.createRadialGradient(640,360,50,640,360,800);gr.addColorStop(0,'#10244a');gr.addColorStop(1,'#030612');g.fillStyle=gr;g.fillRect(0,0,1280,720);
+ const nw=nowT();
+ for(let k=0;k<40;k++){g.globalAlpha=.25;g.fillStyle='#9fc5ff';g.beginPath();g.arc((k*137+nw*(8+k%3*6))%1280,(k*89)%720+Math.sin(nw+k)*18,1+k%3,0,TAU);g.fill()}
+ g.globalAlpha=1;c.f(t);g.globalAlpha=1;
+ if(t<.4){g.fillStyle='#000';g.globalAlpha=1-t/.4;g.fillRect(0,0,1280,720);g.globalAlpha=1}
+ const ss=sents(c);let cur;
+ if(playing&&hasTTS())cur=ss[Math.min(sentIdx,ss.length-1)];
+ else{const tot=c.n.length,pos=p*tot;let acc=0;cur=ss[ss.length-1];for(const s of ss){acc+=s.length+1;if(pos<acc){cur=s;break}}}
+ sub(cur);
+ sl.value=nw*10;const m=Math.floor(nw);tm.textContent=Math.floor(m/60)+':'+String(m%60).padStart(2,'0')+' / 1:35'}
+function frame(ts){const dt=Math.min(.1,(ts-last)/1000);last=ts;
+ if(playing){step(dt);const nw=nowT();if(nw<4.2){const b=Math.floor((nw-.2)/.8);if(b!=lastB&&b>=0){thump();setTimeout(thump,160)}lastB=b}}
+ render();requestAnimationFrame(frame)}
+requestAnimationFrame(frame);
+</script></body></html>
